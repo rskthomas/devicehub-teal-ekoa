@@ -37,7 +37,7 @@
 
                   <div class="col-12">
                     <input type="email" placeholder="Email" name="email" class="form-control" id="yourEmail" required value="{{ form.email.data|default('', true) }}">
-                    <div class="invalid-feedback">Please enter your email.</div>
+                    <div class="invalid-feedback">{{ _('Please enter your email') }}</div>
                   </div>
 
                   <div class="col-12">
@@ -46,7 +46,7 @@
                     <i class="input-group-text bi bi-eye" id="togglePassword" style="cursor: pointer">
                     </i>
                     </div>
-                    <div class="invalid-feedback">Please enter your password!</div>
+                    <div class="invalid-feedback"> {{ _('Please enter your password!') }}</div>
                   </div>
 
                   <!-- TODO(@slamora): hidde until it is implemented

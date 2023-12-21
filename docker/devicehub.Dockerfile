@@ -31,4 +31,8 @@ RUN pip install -e .
 
 COPY docker/devicehub.entrypoint.sh .
 
+
+#compile translations
+RUN pybabel compile -d translations
+
 ENTRYPOINT sh ./devicehub.entrypoint.sh
