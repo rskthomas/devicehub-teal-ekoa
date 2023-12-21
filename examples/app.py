@@ -14,11 +14,12 @@ from ereuse_devicehub.labels.views import labels
 from ereuse_devicehub.mail.flask_mail import Mail
 from ereuse_devicehub.views import core
 from ereuse_devicehub.workbench.views import workbench
-
+from flask_babel import Babel, gettext as _
 # from flask_wtf.csrf import CSRFProtect
 
 
 # from werkzeug.middleware.profiler import ProfilerMiddleware
+
 
 
 SENTRY_DSN = config('SENTRY_DSN', None)
@@ -47,6 +48,16 @@ app.register_blueprint(workbench)
 
 mail = Mail(app)
 app.mail = mail
+
+app.config['BABEL_TRANSLATION_DIRECTORIES'] = './translations'
+babel = Babel(app)
+@babel.localeselector
+def get_locale():
+    return 'es'	
+    #return request.accept_languages.best_match(app.config['LANGUAGES'].keys())
+
+babel.init_app(app)
+
 
 # configure & enable CSRF of Flask-WTF
 # NOTE: enable by blueprint to exclude API views
