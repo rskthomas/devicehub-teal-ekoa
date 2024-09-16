@@ -103,5 +103,61 @@ class InventoryView(LoginMixin, SnapshotMixin):
         move_json(self.tmp_snapshots, self.path_snapshot, g.user.email)
         return self.response
 
+class DatatableView(LoginMixin, SnapshotMixin):
+    methods = ['GET']
+
+    def dispatch_request(self):
+        # Extract query parameters from the request
+        draw = request.args.get('draw', type=int)
+        start = request.args.get('start', type=int)
+        length = request.args.get('length', type=int)
+        search_value = request.args.get('search[value]', type=str)
+        order_column_index = request.args.get('order[0][column]', type=int)
+        order_dir = request.args.get('order[0][dir]', type=str)
+
+        # Define the columns 
+        columns = ['uuid', 'version', 'schema_api', 'software', 'sid', 'type', 'timestamp']
+        order_column_name = columns[order_column_index]
+
+
+        # Query the database
+        query = Snapshot_lite.query.filter(Snapshot_lite.uuid.ilike(f'%{search_value}%'))
+
+        # Apply sorting
+        if order_dir == 'asc':
+            query = query.order_by(order_column_name.asc())
+        else:
+            query = query.order_by(order_column_name.desc())
+
+        total_records = query.count()
+
+        query = query.offset(start).limit(length)
+
+        data = query.all()
+
+        # Format the data for DataTables
+        result = []
+        for row in data:
+            result.append([
+                row.uuid,
+                row.version,
+                row.schema_api,
+                row.software,
+                row.sid,
+                row.type,
+                row.timestamp
+            ])
+
+        response = {
+            'draw': draw,
+            'recordsTotal': total_records,
+            'recordsFiltered': total_records,
+            'data': result
+        }
+
+        return jsonify(response)
+
 
 api.add_url_rule('/inventory/', view_func=InventoryView.as_view('inventory'))
+api.add_url_rule('/datatable/', view_func=DatatableView.as_view('datatable'))
+

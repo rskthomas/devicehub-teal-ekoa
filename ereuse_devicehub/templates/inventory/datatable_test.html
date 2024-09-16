@@ -1,0 +1,39 @@
+
+
+{% extends "ereuse_devicehub/base_site.html" %}
+
+{% block body %}
+    <table id="example" class="display" style="width:100%">
+        <thead>
+            <tr>
+                <th>UUID</th>
+                <th>Device Name</th>
+                <th>Device Type</th>
+                <th>Device Model</th>
+                <!-- Add other columns as needed -->
+            </tr>
+        </thead>
+    </table>
+
+    <script>
+        $(document).ready(function() {
+            $('#example').DataTable({
+                "processing": true,
+                "serverSide": true,
+                "ajax": {
+                    "url": "/api/datatable/",
+                    "type": "GET",
+                    "headers" : { "Authorization": API_URLS.Auth_Token}
+                },
+                "columns": [
+                    {"data": "uuid"},
+                    {"data": "device_name"},
+                    {"data": "device_type"},
+                    {"data": "device_model"}
+                ]
+            });
+        });
+    </script> 
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+{% endblock %}

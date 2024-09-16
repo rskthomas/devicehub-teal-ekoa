@@ -1640,6 +1640,15 @@ class PlaceholderLogListView(GenericMixin):
 
         return placeholder_log
 
+class DatatableTestView(GenericMixin):
+    template_name = 'inventory/datatable_test.html'
+
+    def dispatch_request(self):
+        self.get_context()
+        self.context['page_title'] = "Datatable Test"
+        return flask.render_template(self.template_name, **self.context)
+
+devices.add_url_rule('/datatest/', view_func=DatatableTestView.as_view('datatable_test'))
 
 devices.add_url_rule('/action/add/', view_func=NewActionView.as_view('action_add'))
 devices.add_url_rule('/action/trade/add/', view_func=NewTradeView.as_view('trade_add'))
